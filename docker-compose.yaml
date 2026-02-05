@@ -1,0 +1,76 @@
+services:
+  # OpenClaw Gateway Service
+  openclaw:
+    container_name: container-openclaw
+    env_file:
+      - .env
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL}
+        PYTHON: ${PYTHON}
+        NODE_VERSION: ${NODE_VERSION}
+    ports:
+      - "${OPENCLAW_PORT:-18789}:18789"
+    volumes:
+      - ./www:/var/www
+      - ${PROJECTS_FOLDER:-./www/projects}:/var/www/projects
+      - ${OPENCLAW_FOLDER:-./www/openclaw}:/root/.openclaw
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - ollama
+    networks:
+      - openclaw-network
+    command: ["supervisord", "-n"]
+    # restart: unless-stopped
+
+  # Ollama AI Model Service
+  ollama:
+    container_name: container-ollama
+    image: ollama/ollama:latest
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE:-24h}
+      - OLLAMA_HOST=0.0.0.0
+    networks:
+      - openclaw-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # Open WebUI for Ollama
+  ollama-webui:
+    container_name: container-ollama-webui
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "${WEBUI_PORT:-8080}:8080"
+    volumes:
+      - webui_data:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_AUTH=${WEBUI_AUTH:-false}
+    depends_on:
+      - ollama
+    networks:
+      - openclaw-network
+    restart: unless-stopped
+
+networks:
+  openclaw-network:
+    driver: bridge
+
+volumes:
+  ollama_data:
+  webui_data:

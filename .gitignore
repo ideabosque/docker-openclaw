@@ -1,0 +1,55 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# SSH keys
+openclaw/.ssh/*
+!openclaw/.ssh/.gitkeep
+
+# Logs
+www/logs/*
+!www/logs/.gitkeep
+*.log
+
+# Projects (user-specific)
+www/projects/*
+!www/projects/.gitkeep
+
+# Docker volumes
+ollama_data/
+webui_data/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node modules (if any local development)
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+
+.claude/
+.vscode/
+.env
+*.log
+*.pid
+www/projects
+www/openclaw
+www/logs
+python/.ssh
