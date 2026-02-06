@@ -41,7 +41,7 @@ services:
       - OLLAMA_HOST=0.0.0.0
     networks:
       - openclaw-network
-    restart: unless-stopped
+    # restart: unless-stopped
     deploy:
       resources:
         reservations:
@@ -65,7 +65,7 @@ services:
       - ollama
     networks:
       - openclaw-network
-    restart: unless-stopped
+    # restart: unless-stopped
 
 networks:
   openclaw-network:
