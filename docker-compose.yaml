@@ -22,6 +22,7 @@ services:
       - OLLAMA_HOST=http://ollama:11434
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - FIGMA_TOKEN=${FIGMA_TOKEN}
     depends_on:
       - ollama
     networks:
