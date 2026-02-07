@@ -13,6 +13,7 @@ services:
         NODE_VERSION: ${NODE_VERSION}
     ports:
       - "${OPENCLAW_PORT:-18789}:18789"
+      - "${CODEX_OAUTH_PORT:-1455}:41455"
     volumes:
       - ./www:/var/www
       - ${PROJECTS_FOLDER:-./www/projects}:/var/www/projects

@@ -29,6 +29,7 @@ RUN dnf -y upgrade && \
         libxml2-devel \
         libxslt-devel \
         freetype-devel \
+        socat \
         python3 \
         python3-pip \
         python3-devel && \
@@ -64,6 +65,10 @@ RUN chmod 600 /root/.ssh/* 2>/dev/null || true && \
 # Supervisor config for OpenClaw
 ADD openclaw.ini /etc/supervisord.d/openclaw.ini
 RUN chmod 755 /etc/supervisord.d/openclaw.ini
+
+# Socat relay for OAuth ports (forwards from 0.0.0.0 to 127.0.0.1)
+ADD socat-relay.ini /etc/supervisord.d/socat-relay.ini
+RUN chmod 755 /etc/supervisord.d/socat-relay.ini
 
 COPY requirements.txt /tmp/requirements.txt
 
