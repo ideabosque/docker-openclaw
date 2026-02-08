@@ -55,7 +55,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g pnpm@latest && \
     mkdir -p $PNPM_HOME && \
     pnpm add -g openclaw@latest && \
-    pnpm add -g @openai/codex@latest
+    pnpm add -g @openai/codex@latest && \
+    pnpm add -g @anthropic-ai/claude-code@latest
 
 # SSH keys
 ADD .ssh /root/.ssh
