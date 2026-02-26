@@ -28,7 +28,7 @@ services:
     networks:
       - openclaw-network
     command: ["supervisord", "-n"]
-    restart: no
+    restart: unless-stopped
 
   # Ollama AI Model Service
   ollama:
@@ -67,7 +67,7 @@ services:
       - ollama
     networks:
       - openclaw-network
-    restart: no
+    restart: unless-stopped
 
 networks:
   openclaw-network:
