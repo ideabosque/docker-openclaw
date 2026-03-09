@@ -43,7 +43,7 @@ services:
       - OLLAMA_HOST=0.0.0.0
     networks:
       - openclaw-network
-    restart: no
+    restart: unless-stopped
     deploy:
       resources:
         reservations:
