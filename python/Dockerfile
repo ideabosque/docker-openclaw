@@ -56,7 +56,8 @@ RUN npm install -g pnpm@latest && \
     mkdir -p $PNPM_HOME && \
     pnpm add -g openclaw@latest && \
     pnpm add -g @openai/codex@latest && \
-    pnpm add -g @anthropic-ai/claude-code@latest
+    pnpm add -g @anthropic-ai/claude-code@latest && \
+    pnpm add -g opencode-ai@latest
 
 # SSH keys
 ADD .ssh /root/.ssh
