@@ -59,6 +59,15 @@ RUN npm install -g pnpm@latest && \
     pnpm add -g @anthropic-ai/claude-code@latest && \
     pnpm add -g opencode-ai@latest
 
+# Build OpenClaw Control UI from source (not included in npm package)
+RUN OPENCLAW_PKG=$(ls -d $PNPM_HOME/global/5/.pnpm/openclaw@*/node_modules/openclaw | head -1) && \
+    git clone --depth 1 https://github.com/openclaw/openclaw.git /tmp/openclaw-src && \
+    cd /tmp/openclaw-src && \
+    pnpm install && \
+    pnpm ui:build && \
+    cp -r dist/control-ui "$OPENCLAW_PKG/dist/" && \
+    rm -rf /tmp/openclaw-src
+
 # SSH keys
 ADD .ssh /root/.ssh
 RUN chmod 600 /root/.ssh/* 2>/dev/null || true && \
