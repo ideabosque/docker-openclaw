@@ -52,21 +52,14 @@ ENV PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 # Install pnpm, openclaw and codex globally
 ENV PNPM_HOME="/root/.local/share/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+# Pin openclaw to 2026.3.13 — v2026.3.22 has a known bug where
+# dist/control-ui/ is missing from the npm package (github.com/openclaw/openclaw/issues/52808)
 RUN npm install -g pnpm@latest && \
     mkdir -p $PNPM_HOME && \
-    pnpm add -g openclaw@latest && \
+    pnpm add -g openclaw@2026.3.13 && \
     pnpm add -g @openai/codex@latest && \
     pnpm add -g @anthropic-ai/claude-code@latest && \
     pnpm add -g opencode-ai@latest
-
-# Build OpenClaw Control UI from source (not included in npm package)
-RUN OPENCLAW_PKG=$(ls -d $PNPM_HOME/global/5/.pnpm/openclaw@*/node_modules/openclaw | head -1) && \
-    git clone --depth 1 https://github.com/openclaw/openclaw.git /tmp/openclaw-src && \
-    cd /tmp/openclaw-src && \
-    pnpm install && \
-    pnpm ui:build && \
-    cp -r dist/control-ui "$OPENCLAW_PKG/dist/" && \
-    rm -rf /tmp/openclaw-src
 
 # SSH keys
 ADD .ssh /root/.ssh
