@@ -59,10 +59,15 @@ RUN npm install -g pnpm@latest && \
     pnpm add -g @anthropic-ai/claude-code@latest && \
     pnpm add -g opencode-ai@latest
 
-# Install all OpenClaw bundled plugin runtime deps into openclaw's own node_modules
-RUN OPENCLAW_DIR=$(pnpm root -g)/openclaw && \
-    cd "$OPENCLAW_DIR" && \
-    npm install --save --legacy-peer-deps \
+# Stage OpenClaw bundled plugin runtime deps in a system-global location
+# (outside /root/.openclaw, which is volume-mounted and would shadow build-time installs).
+ENV OPENCLAW_PLUGIN_STAGE_DIR=/usr/local/lib/plugin-runtime-deps
+ENV NODE_PATH=/usr/local/lib/plugin-runtime-deps/node_modules
+RUN mkdir -p "$OPENCLAW_PLUGIN_STAGE_DIR" && \
+    cd "$OPENCLAW_PLUGIN_STAGE_DIR" && \
+    echo '{"name":"openclaw-plugin-deps","version":"1.0.0","private":true}' > package.json && \
+    npm install --save --legacy-peer-deps --no-audit --no-fund \
+        "@anthropic-ai/sdk" \
         "@aws-sdk/client-bedrock@3.1024.0" \
         "@aws-sdk/client-s3@3.1024.0" \
         "@aws-sdk/s3-request-presigner@3.1024.0" \
