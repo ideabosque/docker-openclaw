@@ -29,7 +29,6 @@ RUN dnf -y upgrade && \
         libxml2-devel \
         libxslt-devel \
         freetype-devel \
-        socat \
         python3 \
         python3-pip \
         python3-devel && \
@@ -49,14 +48,13 @@ RUN useradd -m -s /bin/bash linuxbrew && \
     chown -R linuxbrew: /home/linuxbrew/.linuxbrew
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
-# Install pnpm, openclaw and codex globally
+# Install pnpm and openclaw globally
 ENV PNPM_HOME="/root/.local/share/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+ENV PATH="$PNPM_HOME:$PNPM_HOME/bin:$PATH"
 RUN npm install -g pnpm@latest && \
     mkdir -p $PNPM_HOME && \
+    pnpm config set global-bin-dir "$PNPM_HOME" && \
     pnpm add -g openclaw@latest && \
-    pnpm add -g @openai/codex@latest && \
-    pnpm add -g @anthropic-ai/claude-code@latest && \
     pnpm add -g opencode-ai@latest
 
 # Stage OpenClaw bundled plugin runtime deps in a system-global location
@@ -142,10 +140,6 @@ RUN chmod 600 /root/.ssh/* 2>/dev/null || true && \
 # Supervisor config for OpenClaw
 ADD openclaw.ini /etc/supervisord.d/openclaw.ini
 RUN chmod 755 /etc/supervisord.d/openclaw.ini
-
-# Socat relay for OAuth ports (forwards from 0.0.0.0 to 127.0.0.1)
-ADD socat-relay.ini /etc/supervisord.d/socat-relay.ini
-RUN chmod 755 /etc/supervisord.d/socat-relay.ini
 
 COPY requirements.txt /tmp/requirements.txt
 

@@ -16,10 +16,6 @@ www/logs/*
 www/projects/*
 !www/projects/.gitkeep
 
-# Docker volumes
-ollama_data/
-webui_data/
-
 # OS files
 .DS_Store
 Thumbs.db
@@ -49,7 +45,10 @@ __pycache__/
 .env
 *.log
 *.pid
-www/projects
-www/openclaw
-www/logs
+www/projects/*
+!www/projects/.gitkeep
+www/openclaw/*
+!www/openclaw/.gitkeep
+www/logs/*
+!www/logs/.gitkeep
 python/.ssh

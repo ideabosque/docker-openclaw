@@ -1,16 +1,14 @@
 ## Introduction
 
-Docker Compose deployment for OpenClaw with Ollama integration. This project provides a containerized environment for running OpenClaw (autonomous AI assistant) alongside Ollama for local LLM inference.
+Docker Compose deployment for OpenClaw. This project provides a containerized environment for running OpenClaw (autonomous AI assistant).
 
-Based on the structure of [silvaengine_docker](../silvaengine/silvaengine_docker) and incorporating patterns from [mythrantic/ollama-docker](https://github.com/mythrantic/ollama-docker).
+Based on the structure of [silvaengine_docker](../silvaengine/silvaengine_docker).
 
 ## Services
 
 | Service | Description | Port |
 |---------|-------------|------|
 | openclaw | OpenClaw Gateway (Node.js + Python) | 18789 |
-| ollama | Ollama LLM Server | 11434 |
-| ollama-webui | Open WebUI Interface | 8080 |
 
 ## Installation
 
@@ -75,32 +73,19 @@ Configure the `python/requirements.txt` file to manage the necessary packages. E
 The OpenClaw container includes:
 - Node.js 22 with OpenClaw installed globally via pnpm
 - Python 3.12 with virtual environment at `/var/python3.12/openclaw/env`
-- Ollama, Anthropic, OpenAI Python SDKs
+- Anthropic, OpenAI, Ollama Python SDKs
 - Supervisor for process management
 
-### Ollama
+### Ollama Cloud
 
-Pull models via the API or Open WebUI:
+Local inference is not bundled. To use [Ollama Cloud](https://ollama.com), set the following in `.env`:
 
-```bash
-# Pull a model
-curl http://localhost:11434/api/pull -d '{"name": "llama3.2"}'
-
-# List models
-curl http://localhost:11434/api/tags
+```
+OLLAMA_HOST=https://ollama.com
+OLLAMA_API_KEY=your_ollama_cloud_api_key
 ```
 
-### Open WebUI
-
-Access the web interface at `http://localhost:8080` to interact with Ollama models.
-
-## GPU Support
-
-The `ollama` service is configured for NVIDIA GPU support. Ensure you have:
-- NVIDIA drivers installed
-- NVIDIA Container Toolkit installed
-
-For CPU-only mode, remove the `deploy` section from the ollama service in `docker-compose.yaml`.
+Both values are passed through to the `openclaw` container's environment.
 
 ## Directory Structure
 
